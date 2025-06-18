@@ -1,0 +1,85 @@
+body {
+    background-color: #1e272e;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 4rem;
+}
+
+/* titolo */
+h1 {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Navbar spacer */
+.navbar-spacer {
+    height: 70px;
+}
+
+/* Logout button */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* Search bar */
+#searchBar {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+
+#searchBar::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* tabella utenti */
+
+h2 {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#userTable table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+#userTable thead {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#userTable th,
+#userTable td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+#userTable tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* pulsanti righe tabella */
+#userTable button {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: background 0.2s ease;
+}
+
+#userTable button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}

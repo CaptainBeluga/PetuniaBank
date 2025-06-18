@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+        <title>Petunia Bank - Home</title>
+        <link rel="icon" href="./img/favicon.ico">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/index.css">
+    </head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top p-4 mb-5" style="z-index: 1000;">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img src="<%= data.picture %>" class="rounded-circle w-50 img-fluid">
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end mobile-center" id="navbarSupportedContent">
+                <div class="d-flex flex-column align-items-center gap-3 mt-2 mt-lg-0">
+                    <% if (permissions.adminView) {%><a class="btn btn-outline-light" href="/admin" id="admin"><i
+                        class="fas fa-user me-2"></i>Admin</a>
+                    <%} %>
+                    <% if (permissions.brokerView) {%><a class="btn btn-outline-light" href="/broker" id="broker"><i
+                                class="fas fa-user me-2"></i>Market Trend</a>
+                        <%} %>
+                            <a class="btn btn-outline-light" href="/logout"><i class="fas fa-user me-2"></i>Logout</a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <div class="navbar-spacer"></div>
+
+    <div class="container py-5">
+        <!--video di sfondo-->
+        <div class="video-background">
+            <video autoplay muted loop id="bgVideo">
+                <source src="./video/video-background.mp4" type="video/mp4">
+                <img src="./video/video-background.mp4" alt="Background alternativo">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <!--deposito animation-->
+        <div class="video-overlay" id="videoOverlay">
+            <div class="video-container">
+                <button class="close-video" onclick="closeVideo()">&times;</button>
+                <div class="money-rain" id="moneyRain"></div>
+                <div class="video-text">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 id="actionName"></h2>
+                    <p id="actionAmount">... €</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- header -->
+        <div class="header mt-5">
+            <h1><i class="fas fa-university me-3"></i>Petunia Bank</h1>
+            <p class="mb-0">Gestione dell'account (<span class="fw-bold">
+                    <%= data.nickname %>
+                </span>)</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- saldo -->
+                <div class="card balance-card mb-4">
+                    <div class="card-body text-center">
+                        <h3><i class="fas fa-wallet me-2"></i>Saldo Disponibile</h3>
+                        <div class="balance-amount" id="balance">
+                            <%= data.balance %> €
+                        </div>
+                        <small class="opacity-75">Ultimo aggiornamento: <span id="last-update"></span></small>
+                    </div>
+                </div>
+
+                <!-- transazioni -->
+                <div class="card transaction-form">
+                    <div class="card-body">
+                        <h4 class="text-center mb-4"><i class="fas fa-exchange-alt me-2"></i>Operazioni</h4>
+
+                        <div id="transaction-form">
+                            <div class="mb-4">
+                                <label for="amount" class="form-label">Importo (€)</label>
+                                <input type="number" class="form-control" id="amount" placeholder="Inserisci l'importo" step="0.01">
+                                
+                                <input type="hidden" value="<%= csrf_token %>" id="csrf_token">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-deposit btn-custom w-100" id="deposit-btn">
+                                        <i class="fas fa-plus-circle me-2"></i>Deposita
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-withdraw btn-custom w-100" id="withdraw-btn">
+                                        <i class="fas fa-minus-circle me-2"></i>Preleva
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <div class="info-box mt-4">
+                    <h4 class="text-center mb-4"><i class="fas fa-history me-2"></i>Cronologia Pagamenti</h4>
+                    <hr>
+
+                    <h4 class="text-danger text-center fw-bold d-none mt-4" id="historyError">Nessun Dato Presente</h4>
+
+                    <div class="table-responsive mt-4 d-none" id="history-table">
+                        <table class="table table-striped table-dark mb-4">
+
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Data</th>
+                                    <th>Importo</th>
+                                </tr>
+                            </thead>
+
+                            <tbody></tbody>
+
+
+                        </table>
+
+                        <hr>
+
+                        <h4 class="text-center mt-4">Prelievi Giornalieri: <span class="fw-bold text-danger"
+                                id="dailyWithdraws">
+                                <%= data.dailyWithdraws %> €
+                            </span>
+                        </h4>
+
+                        
+                    </div>
+
+                    <select class="form-select text-center mt-3 mb-3" id="filterSelector" data-bs-theme="dark"></select>
+                </div>
+                <!-- limiti -->
+                <div class="info-box">
+                    <h6><i class="fas fa-info-circle me-2"></i>Regole e Limiti</h6>
+                    <div class="row">
+                        <%
+                            const config = Object.keys(bankConfig)
+                            const len = Math.ceil(config.length/2)
+
+                            const columns = [config.slice(0, len), config.slice(len)]
+                        %>
+
+                        <% columns.forEach(column => { %>
+                            <div class="col-md-6">
+                                <ul>
+                                    <% column.forEach(k => { %>
+                                        <li><%= k %> <%= bankConfig[k] ?? "" %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        <% }) %>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/index.js"></script>
+
+</body>
+
+</html>

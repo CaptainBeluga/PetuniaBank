@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/signin.css">
+    <meta charset="UTF-8">
+    <title>Petunia Bank - Login</title>
+    <link rel="icon" href="./img/favicon.ico">
+</head>
+
+<body data-bs-theme='dark'>
+    <div>
+
+        <h1 class="text-center position-absolute w-100 rainbow-header" style="top: 40px; left: 0; z-index: 10;"><span
+                class="fw-bold">Login With</span>:</h1>
+        <div class="container d-flex justify-content-center align-items-center position-absolute w-100"
+            style="top: 0; left: 0; bottom: 0; right: 0; z-index: 5; min-height: 100vh; height: 100vh;">
+            <div class="login-container">
+                <div class="card login-card">
+                    <div class="login-header">
+                        <div class="bank-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h1>Petunia Bank</h1>
+                        <p class="mb-0 opacity-75">Accedi al tuo account</p>
+                    </div>
+
+                    <!-- per Auth0 -->
+                    <button type="button" class="btn btn-auth0" id="auth0LoginBtn">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Accedi con Auth0
+                    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/signin.js"></script>
+</body>
+
+</html>

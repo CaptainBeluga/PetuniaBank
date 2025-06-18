@@ -1,0 +1,47 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 4rem;
+}
+
+/* titolo*/
+h1 {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.navbar-spacer {
+    height: 70px;
+}
+
+/*logout btn*/
+#logoutBtn {
+    display: inline-block;
+    width: fit-content;
+}
+
+#logoutBtn a {
+    text-decoration: none !important;
+    color: inherit !important;
+    ;
+}
+
+#logoutBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#logoutBtn:hover a {
+    color: inherit !important;
+}
+
+/*grafico*/
+#tradingview-widget {
+    margin-bottom: 2rem;
+}
+
+#myChart{
+    max-width:1000px;
+    max-height:500px;
+}
+#fatturationButton {
+    display: block;
+    margin: 0 auto;
+        padding: 0.5em 2em;
+}
