@@ -27,7 +27,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.AUTH0_SECRET,
-  baseURL: `http://localhost:${process.env.SERVER_PORT}`,
+  baseURL: process.env.BASE_URL,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 }
@@ -534,8 +534,8 @@ app.use((req, res) => {
     res.redirect(req.oidc.isAuthenticated() ? "/home" : "/")
 })
 
-app.listen(process.env.SERVER_PORT, () => {
-    console.log(`Server running on http://localhost:${process.env.SERVER_PORT}`)
+app.listen(3000, () => {
+    console.log(`Server running on ${process.env.BASE_URL}`)
 })    
 
 
