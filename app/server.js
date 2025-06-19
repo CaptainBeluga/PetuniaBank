@@ -34,12 +34,19 @@ const config = {
 
 app.use(auth(config))
 
+
+if (isProd)  app.set("trust proxy", 1)
+
 app.use(session({
     name: "petuniaBank",
     secret: process.env.PETUNIA_SECRET,
     resave: false, //not reloaded foreach request
     saveUninitialized: false, //at least one field inside
-    cookie: { secure: isProd } //true for HTTPS (in production)
+    cookie: {
+        secure: isProd,  //true for HTTPS (in production)
+        httpOnly: true,
+        sameSite: "lax"
+    }
 }))
 
 const bankConfig = {
@@ -264,13 +271,9 @@ app.get("/home", async (req, res) => {
 
 app.get("/", (req, res) => {
     if (req.oidc.isAuthenticated()) { return res.redirect("/home") }
+
+    res.clearCookie("petuniaBank")
     res.render("signin")
-})
-
-
-
-app.get("/logout", requiresAuth(), (req, res) => {
-    res.oidc.logout()
 })
 
 
