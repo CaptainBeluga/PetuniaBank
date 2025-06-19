@@ -35,7 +35,7 @@ const config = {
 app.use(auth(config))
 
 
-if (isProd)  app.set("trust proxy", 1)
+if (isProd) app.set("trust proxy", 1)
 
 app.use(session({
     name: "petuniaBank",
@@ -43,7 +43,7 @@ app.use(session({
     resave: false, //not reloaded foreach request
     saveUninitialized: false, //at least one field inside
     cookie: {
-        secure: isProd,  //true for HTTPS (in production)
+        secure: false,  //true for HTTPS (in production) | RENDER => HTTP CONTAINER using HTTPS PROXY
         httpOnly: true,
         sameSite: "lax"
     }
