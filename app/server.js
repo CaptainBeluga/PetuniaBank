@@ -34,9 +34,6 @@ const config = {
 
 app.use(auth(config))
 
-
-if (isProd) app.set("trust proxy", 1)
-
 app.use(session({
     name: "petuniaBank",
     secret: process.env.PETUNIA_SECRET,
