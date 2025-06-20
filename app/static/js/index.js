@@ -65,7 +65,7 @@ function updatePaymentHistory(addFilters=false, filter="all"){
             }
 
 
-
+            filterSelector.value = filter
         }
 
         else{
@@ -87,9 +87,8 @@ function handleTransaction(type) {
     body: JSON.stringify(data)
     }).then(r => r.json())   
     .then(r => {
+
         if(r["success"]){
-            
-            // deposito
             document.getElementById('actionName').textContent = `${actions[type]} Riuscito!` 
             document.getElementById('actionAmount').textContent = formatCurrency(data.amount)
 
@@ -102,7 +101,7 @@ function handleTransaction(type) {
                 showAlert(`${actions[type]} di ${formatCurrency(data.amount)} effettuato con successo!`, "success")
                 
                 updateInfo()
-                updatePaymentHistory()
+                updatePaymentHistory(false, "today")
             }, 2500)
         }
 
