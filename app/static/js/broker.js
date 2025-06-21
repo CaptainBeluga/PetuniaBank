@@ -1,23 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.getElementById('myChart').getContext('2d')
   
-  fetch("/broker/market?market=0&yearsCount=5").then(r => r.json()).then(r => {
-
-    if(r["success"]){
-      new Chart(ctx, {
-          type: 'line',
-          data: r["graphData"],
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true
+  fetch("/broker/market?market=0&yearsCount=5", {
+    redirect: "manual"
+  })
+  .then(r => checkRequiresAuth(r))
+  .then(r => {
+      if(r["success"]){
+        new Chart(ctx, {
+            type: 'line',
+            data: r["graphData"],
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
               }
             }
-          }
         })
-    }
-
+      }
   })
 })
 

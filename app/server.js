@@ -3,9 +3,7 @@ const session = require('express-session')
 
 const { Client } = require("pg")
 
-
 const app = express()
-
 app.use(express.json())
 
 const dotenv = require("dotenv")
@@ -79,6 +77,8 @@ function returnError(msg){ return {success: false, error: msg} }
 function randomNumber(min=0, max=1){ return Math.floor(Math.random() * (max - min + 1)) + min }
     
 function getCurrentDate(date=0, options={}){ return new Date(Date.now()+date).toLocaleDateString(bankConfig.dateFormat, {timeZone: "Europe/Rome", ...options}) }
+
+function formatDate(day, month=false){ return (day+(month ? 1 : 0)).toString().padStart(2, "0") }
 
 //MOCK CURRENT DATE
 // function mockCurrentDate() { 
@@ -279,12 +279,13 @@ app.get("/account", requiresAuth(), async (req, res) => res.json(await getAccoun
 app.get("/account/finance", requiresAuth(), async (req, res) => {
     try {
         const accountInfo = await getAccountInfo(req)
+        const td = new Date()
         
         res.json({
             success: true,
             balance: accountInfo["balance"],
             dailyWithdraws: accountInfo["dailyWithdraws"],
-            lastUpdate: getCurrentDate()
+            lastUpdate: `${formatDate(td.getDay())}/${formatDate(td.getMonth(), true)}/${td.getFullYear()} - ${formatDate(td.getHours())}:${formatDate(td.getMinutes())}:${formatDate(td.getSeconds())}`
         })
 
     } catch (error) {
@@ -383,11 +384,7 @@ app.get("/account/history", requiresAuth(), async (req, res) => {
 
             case "thisMonth":
                 let tempDate = new Date()
-
-                let month = tempDate.getMonth()+1
-                month = month < 10 ? `0${month}` : month
-
-                queryFilter+= `like '__/${month}/${tempDate.getFullYear()}'`
+                queryFilter+= `like '__/${formatDate(tempDate.getMonth(), true)}/${tempDate.getFullYear()}'`
                 break
 
                 
@@ -462,7 +459,6 @@ app.get("/admin/view", requiresAuth(), requiresAdmin, async (req, res) => {
         })
 
     } catch(error){ 
-        console.log(error)
         res.json(returnError("Failed to fetch Users Info")) }
     
 })

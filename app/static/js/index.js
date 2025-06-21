@@ -18,7 +18,11 @@ const csrf_token = document.querySelector("#csrf_token").value
 
 
 function updateInfo(){
-    fetch("account/finance").then(r => r.json()).then(r => {
+    fetch("account/finance", {
+        redirect: "manual"
+    })
+    .then(r => checkRequiresAuth(r))
+    .then(r => {
         balanceElement.textContent = r["success"] ? `${r["balance"]} €` : "... €"
         dailyWithdrawsElement.textContent = r["success"] ? `${r["dailyWithdraws"]} €` : "... €"
         
@@ -29,7 +33,10 @@ function updateInfo(){
 
 //aggiorna cronologia pagamenti
 function updatePaymentHistory(addFilters=false, filter="all"){
-    fetch(`account/history?view=${filter}`).then(r => r.json())
+    fetch(`account/history?view=${filter}`, {
+        redirect: "manual"
+    })
+    .then(r => checkRequiresAuth(r))
     .then(r => {
         if(r["success"] && r["history"].length > 0){
             historyTable.classList.remove("d-none")
@@ -80,37 +87,39 @@ function handleTransaction(type) {
     const data = {amount: parseFloat(amountInput.value), csrf_token: csrf_token}
 
     fetch(`account/${type}`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-    }).then(r => r.json())   
-    .then(r => {
+        redirect: "manual",
 
-        if(r["success"]){
-            document.getElementById('actionName').textContent = `${actions[type]} Riuscito!` 
-            document.getElementById('actionAmount').textContent = formatCurrency(data.amount)
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        }).then(r => checkRequiresAuth(r))   
+        .then(r => {
 
-            createMoneyRain()
-            overlay.style.display = 'flex'
+            if(r["success"]){
+                document.getElementById('actionName').textContent = `${actions[type]} Riuscito!` 
+                document.getElementById('actionAmount').textContent = formatCurrency(data.amount)
 
-            setTimeout(() => {
-                closeVideo()
-                
-                showAlert(`${actions[type]} di ${formatCurrency(data.amount)} effettuato con successo!`, "success")
-                
-                updateInfo()
-                updatePaymentHistory(false, "today")
-            }, 2500)
-        }
+                createMoneyRain()
+                overlay.style.display = 'flex'
 
-        else{
-            showAlert(r["error"], 'danger')
-        }
+                setTimeout(() => {
+                    closeVideo()
+                    
+                    showAlert(`${actions[type]} di ${formatCurrency(data.amount)} effettuato con successo!`, "success")
+                    
+                    updateInfo()
+                    updatePaymentHistory(false, "today")
+                }, 2500)
+            }
 
-        amountInput.value = ''
-    })
+            else{
+                showAlert(r["error"], 'danger')
+            }
+
+            amountInput.value = ''
+        })
 }
 
 //formato valuta
@@ -191,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     depositBtn.addEventListener('click', () => handleTransaction('deposit'))
     withdrawBtn.addEventListener('click', () => handleTransaction('withdraw'))
-
 
 })
 

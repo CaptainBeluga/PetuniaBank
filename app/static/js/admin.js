@@ -38,7 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function adminViewRequest(loadFilter=false, page=1){
-    fetch(`admin/view?page=${page}`).then(r => r.json()) .then(r => {
+    fetch(`admin/view?page=${page}`, {
+      redirect : "manual"
+
+    }).then(r => checkRequiresAuth(r))
+    
+    .then(r => {
       if(r["success"]){
         fetchObj = r
 
