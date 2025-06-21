@@ -6,6 +6,6 @@ function checkRequiresAuth(r){
     //302
     // window.location.href = "http://localhost:3000/login"
     window.location.href = "https://petuniabank.onrender.com/login"
-    return {success: false}
+    return {success: false, error: "Login is Required"}
 
 }
