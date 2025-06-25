@@ -24,6 +24,6 @@ app.use((req, res) => {
     res.redirect("/moved")
 })
 
-app.listen(3001, () => {
+app.listen(3000, () => {
     console.log(`Server running on ${process.env.BASE_URL}`)
 })    
