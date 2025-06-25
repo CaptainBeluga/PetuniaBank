@@ -425,7 +425,7 @@ app.get("/admin/view", requiresAuth(), requiresAdmin, async (req, res) => {
     }
 
     try{
-        const totalRows = (await con.query("select * from users")).rows.length
+        const totalRows = (await con.query("select count(*) as totalusers from users")).rows[0]["totalusers"]
         const totalPages = Math.ceil(totalRows/USERS_FOR_PAGE)
 
         if(page > totalPages || page <= 0){

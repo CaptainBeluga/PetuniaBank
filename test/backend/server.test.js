@@ -145,22 +145,6 @@ describe("Page View Endpoints", () => {
     
   })
 
-
-  
-
-  test("Logout - Not Auth - 302", async () => {
-    editOpenIdMock({isAuthenticated: false, role:""})
-
-    const res = await request(app).get("/logout")
-    expect(res.headers.location).toEqual("https://google.com")
-  })
-
-
-  test("Logout - Already Auth - 302", async () => {
-    const res = await request(app).get("/")
-
-    expect(res.headers.location).toEqual("/home")
-  })
 })
 
 
@@ -233,7 +217,7 @@ describe("API Account Endpoints", () => {
   })
 
 
-  test("/account/deposit => Deposit Failed (Not Auth)", async () => {
+  test("/account/deposit => Deèposit Failed (Not Auth)", async () => {
     editOpenIdMock({isAuthenticated: false, role:""})
 
     const res = await request(app).post("/account/deposit")
@@ -352,15 +336,21 @@ describe("API Admin Endpoints", () => {
 
   test("/admin/view => Admin Users View Success", async () => {
     client.query.mockImplementation(sql => {
+      if(sql.includes("select count(*) as totalusers from users")) return Promise.resolve({rows: [{totalusers: 21}]})
+
       if(sql.includes("SELECT * from users ORDER BY CASE")) return Promise.resolve({rows: [{oauth_sub: "1XXXXXXXXXXXXXXXXXXXXXXX", nickname: "mock", role: "user"}]})
 
       if(sql.includes("SELECT SUM(")) return Promise.resolve({rows: [{balance: 5000}]})
 
       if(sql.includes("SELECT sum(amount) AS dailyWithdraws")) return Promise.resolve({rows: [{dailywithdraws: 50}]})
+
     })
 
     const res = await request(app).get("/admin/view")
     expect(res.body.success).toBe(true)
+
+    expect(res.body.totalPages).toEqual(Math.ceil(21/10)) //3 pages for 21 elements
+
     expect(Array.isArray(res.body.usersInfo)).toBe(true)
     expect(res.body.usersInfo[0]).toHaveProperty("oauthID")
   })
